@@ -1,6 +1,12 @@
 Sample App
 ========================
 
+This steps assume you are working on an up to date lamp enviroment.
+
+0) Symfony Documentation
+----------------------------------
+http://symfony.com/doc/current/book/index.html
+
 1) Cloning the app
 ----------------------------------
 
@@ -19,8 +25,12 @@ After this all the commands in this doc assume you're inside the sampleApp folde
 
 This will populate the folder /vendor
 
+This step might require to install the php-composer package
+
 3) Create the database
 ----------------------------------
+The default user is root with an empty password. To change this params modify /app/config/parameters.yml
+
     php app/console doctrine:database:create
     php app/console doctrine:schema:create
     php app/console doctrine:fixtures:load
@@ -32,4 +42,4 @@ This will populate the folder /vendor
 
 5) Start the app
 ----------------------------------
-    http://localhost/sampleApp/app_dev.php
+    http://localhost/sampleApp/web/app_dev.php
