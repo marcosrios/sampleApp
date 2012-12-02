@@ -1,0 +1,87 @@
+<?php
+
+namespace Omitsis\SampleAppBundle\Controller;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
+/**
+ * Activeboats controller.
+ *
+ * @Route("/activeboats")
+ */
+class ActiveboatsController extends Controller
+{
+    /**
+     * Lists all active Boats entities.
+     *
+     * @Route("/", name="activeboats")
+     * @Template()
+     */
+    public function indexAction()
+    {
+
+	$actives = $this->getAllActiveBoats();
+	$grouped = $this->CountBoatsPerOwnerAndCity();
+
+        return array(
+	    'actives' => $actives, 'grouped' => $grouped	
+	);
+
+   }
+
+   private function getAllActiveBoats() {
+
+	$entities = $this->getDoctrine()->getEntityManager()->createQuery('SELECT b FROM OmitsisSampleAppBundle:Boat b WHERE b.active=true ORDER BY b.owner, b.city ASC')->getResult();
+
+/*	COMENTAT, EL CODI TAL I COM HO VAIG IMPLEMENTAR INICIALMENT.
+	VAIG DECIDIR CANVIAR-HO PER TAL QUE APAREGUESSIN LES DADES ORDENADES PER PROPIETARI I CIUTAT.
+	
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('OmitsisSampleAppBundle:Boat')->findBy(
+		array('active' => true)
+	);
+*/
+
+        return $entities;
+   }
+
+   private function CountBoatsPerOwnerAndCity() {
+
+	$entities = $this->getDoctrine()->getEntityManager()->createQuery('SELECT u.id as uid, u.name as uname, c.id as cid, c.name as cname, count(b.id) AS quantity FROM OmitsisSampleAppBundle:user u LEFT JOIN OmitsisSampleAppBundle:boat b WHERE u.id=b.owner LEFT JOIN OmitsisSampleAppBundle:city c WHERE c.id=b.city GROUP BY u.id, c.id ORDER BY u.name, c.name')->getResult();
+
+        return $entities;
+/*
+
+	$entities = $this->getDoctrine()->getEntityManager()->createQuery('SELECT u.id, u.name, count(b.id) AS quantity FROM OmitsisSampleAppBundle:user u LEFT JOIN OmitsisSampleAppBundle:boat b WHERE u.id=b.owner GROUP BY u.id ORDER BY u.name')->getResult();
+
+
+	->select('u.name, count(*)')
+	->from('OmitsisSampleAppBundle:User','u')
+	->leftJoin('OmitsisSampleAppBundle:Boat','b')
+	->groupBy('u.id')
+	->orderBy('u.name')
+	->getQuery()	
+	->getResult();
+
+        return $entities;
+*/
+/*
+SELECT u.name, c.name, COUNT( * )
+FROM (
+(
+user u
+LEFT JOIN boat b ON u.id = b.owner_id
+)
+LEFT JOIN city c ON c.id = b.city_id
+)
+GROUP BY u.name, c.name
+ORDER BY u.name, c.name ASC
+*/
+   }
+
+}

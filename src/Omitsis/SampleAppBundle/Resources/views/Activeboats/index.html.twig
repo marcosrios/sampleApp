@@ -1,0 +1,51 @@
+<h1>Active Boats list</h1>
+
+<table class="records_list">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Owner</th>
+            <th>City</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for entity in actives %}
+        <tr>
+            <td>{{ entity.id }}</td>
+            <td>{{ entity.name }}</td>
+            <td>{{ entity.owner }}</td>
+            <td>{{ entity.city }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+<br />
+<h1>Boats grouped by Owner & City</h1>
+
+<table class="records_list">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Id</th>
+            <th>City</th>
+            <th>Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for entity in grouped %}
+        <tr>
+            <td>{{ entity.uid }}</td>
+            <td>{{ entity.uname }}</td>
+            <td>{{ entity.cid }}</td>
+            <td>{{ entity.cname }}</td>
+            <td>{{ entity.quantity }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
